@@ -46,3 +46,10 @@ def create_triplet(image,dico):
     list_pos.append(posit)
     list_neg.append(negat)
   return list_anchor, list_pos, list_neg
+
+# normalize
+transform = transforms.Compose([
+    transforms.Resize((224, 224)),  # Resize 
+    transforms.ToTensor(),           # Convert PIL Image to Tensor
+    transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])  # Normalize
+])
