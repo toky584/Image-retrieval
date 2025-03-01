@@ -7,6 +7,26 @@ def loading_image(path):
         list_images.append(photo.convert('RGB'))
     return list_images
 
+#function loading five images per classes 
+def loading_5_per_class_lab(path, label):
+    liste_image = []
+    dict_count_lab = {}
+    label_img = []
+    for i in range(len(label)):
+        if label[i] not in dict_count_lab:
+            dict_count_lab[label[i]] = 0    
+    for file in os.listdir(path):
+        ident = file[0:4]
+        if dict_count_lab [ident] == 5:
+            continue
+        else:
+            path_file = os.path.join(path, file)
+            photo = Image.open(path_file)
+            liste_image.append(photo.convert('RGB'))
+            dict_count_lab[ident] += 1
+            label_img.append(ident)
+    return liste_image, label_img
+
 #function to get the labels
 def load_label(path):
   label = []
