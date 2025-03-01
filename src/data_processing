@@ -1,0 +1,48 @@
+#function to get the images.
+def loading_image(path):
+    path = [os.path.join(path, file) for file in os.listdir(path)]
+    list_images = []
+    for path_file in path:
+        photo = Image.open(path_file)
+        list_images.append(photo.convert('RGB'))
+    return list_images
+
+#function to get the labels
+def load_label(path):
+  label = []
+  for file in os.listdir(path):
+    lab = file[0:4] 
+    label.append(lab)
+  return label
+
+#generate the dico used for the triplet.
+def generate_dico(image, label):
+  dico = {}
+  for i in range(len(image)):
+    img = image[i]
+    lab = label[i]
+    if lab not in dico:
+      dico[lab] = []
+    dico[lab].append(image[i])
+  return dico
+
+#function creating the triplet anchor, positive and   
+def create_triplet(image,dico):
+  list_anchor = []
+  list_pos = []
+  list_neg = []
+  for lab in dico: 
+    list_idx_pos = [k for k in range(len(dico[lab]))]
+    label_neg = [labe for labe in dico if labe != lab]
+    label_neg_idx = np.random.choice([k for k in range(len(label_neg))])
+    list_idx_neg = [k for k in range(len(dico[label_neg[label_neg_idx]]))]
+    anch_idx = np.random.choice(list_idx_pos)
+    pos_indx = np.random.choice([k for k in list_idx_pos if k!= anch_idx])
+    neg_idx = np.random.choice(list_idx_neg)
+    anchor = dico[lab][anch_idx]
+    posit = dico[lab][pos_indx]
+    negat = dico[label_neg[label_neg_idx]][neg_idx]
+    list_anchor.append(anchor)
+    list_pos.append(posit)
+    list_neg.append(negat)
+  return list_anchor, list_pos, list_neg
